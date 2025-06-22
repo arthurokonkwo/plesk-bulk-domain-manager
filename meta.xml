@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    <id>bulk-domain-manager</id>
+    <n>Bulk Domain Manager</n>
+    <description>Manage multiple domains and subscriptions in bulk operations</description>
+    <version>1.0.0</version>
+    <release>1</release>
+    <vendor>Custom Extension</vendor>
+    <plesk_min_version>18.0.0</plesk_min_version>
+    
+    <client_interface>
+        <entries>
+            <entry>
+                <url>/modules/bulk-domain-manager/</url>
+                <title>Bulk Manager</title>
+                <description>Manage domains and subscriptions in bulk</description>
+                <icon>icon.png</icon>
+                <section>admin</section>
+                <permissions>
+                    <permission>domain-administration</permission>
+                    <permission>subscription-administration</permission>
+                </permissions>
+            </entry>
+        </entries>
+    </client_interface>
+    
+    <admin_interface>
+        <entries>
+            <entry>
+                <url>/modules/bulk-domain-manager/</url>
+                <title>Bulk Manager</title>
+                <description>Manage domains and subscriptions in bulk</description>
+                <icon>icon.png</icon>
+                <section>server</section>
+                <permissions>
+                    <permission>domain-administration</permission>
+                    <permission>subscription-administration</permission>
+                </permissions>
+            </entry>
+        </entries>
+    </admin_interface>
+</module>
