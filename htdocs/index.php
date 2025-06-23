@@ -1,16 +1,17 @@
 <?php
 /**
- * Bulk Domain Manager - Main Entry Point
- * This file serves as the entry point for the extension
+ * Bulk Domain Manager - Entry Point
+ * This file serves as the main entry point for the Plesk extension
  */
 
-// Initialize Plesk module context
-require_once 'pm/Context.php';
+// Properly initialize the Plesk module context
 pm_Context::init('bulk-domain-manager');
 
-// Include the main controller
-require_once pm_Context::getPlibDir() . 'controllers/IndexController.php';
+// Set up autoloading for our classes
+$loader = new pm_Loader();
+$loader->registerNamespace('Modules_BulkDomainManager', pm_Context::getPlibDir());
 
-// Create and run the controller
-$controller = new IndexController();
-$controller->run();
+// Initialize and dispatch the request using Plesk's standard pattern
+$application = new pm_Application();
+$application->bootstrap();
+$application->run();
