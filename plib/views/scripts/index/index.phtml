@@ -1,0 +1,151 @@
+<?php
+/**
+ * Bulk Domain Manager - Main View Template
+ */
+?>
+
+<div class="bulk-manager-container">
+    <h1><?php echo $this->escape($this->pageTitle); ?></h1>
+    
+    <div class="bulk-manager-form">
+        <form method="post" id="bulkManagerForm">
+            <div class="form-section">
+                <h3>URLs/Domains</h3>
+                <p class="help-text">Enter one URL or domain per line. You can include or exclude protocols (http/https) and www.</p>
+                <textarea 
+                    name="urls" 
+                    id="urls" 
+                    rows="10" 
+                    cols="80" 
+                    placeholder="example.com&#10;www.another-site.com&#10;https://third-site.com"
+                    required><?php echo $this->escape($this->urls); ?></textarea>
+                <div id="url-validation-feedback"></div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Action Type</h3>
+                <div class="action-type-selection">
+                    <label>
+                        <input type="radio" name="action_type" value="domain" <?php echo ($this->actionType === 'domain') ? 'checked' : ''; ?> />
+                        Domain Actions
+                    </label>
+                    <label>
+                        <input type="radio" name="action_type" value="subscription" <?php echo ($this->actionType === 'subscription') ? 'checked' : ''; ?> />
+                        Subscription Actions
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-section" id="action-selection">
+                <!-- Domain Actions -->
+                <div id="domain-actions" style="display: none;">
+                    <h4>Domain Actions</h4>
+                    <select name="selected_action" id="domain-action-select">
+                        <option value="">Select Domain Action...</option>
+                        <option value="activate" <?php echo ($this->selectedAction === 'activate') ? 'selected' : ''; ?>>Activate</option>
+                        <option value="suspend" <?php echo ($this->selectedAction === 'suspend') ? 'selected' : ''; ?>>Suspend</option>
+                        <option value="deactivate" <?php echo ($this->selectedAction === 'deactivate') ? 'selected' : ''; ?>>Deactivate</option>
+                        <option value="remove" <?php echo ($this->selectedAction === 'remove') ? 'selected' : ''; ?>>Remove</option>
+                    </select>
+                </div>
+                
+                <!-- Subscription Actions -->
+                <div id="subscription-actions" style="display: none;">
+                    <h4>Subscription Actions</h4>
+                    <select name="selected_action" id="subscription-action-select">
+                        <option value="">Select Subscription Action...</option>
+                        <option value="activate" <?php echo ($this->selectedAction === 'activate') ? 'selected' : ''; ?>>Activate</option>
+                        <option value="suspend" <?php echo ($this->selectedAction === 'suspend') ? 'selected' : ''; ?>>Suspend</option>
+                        <option value="remove" <?php echo ($this->selectedAction === 'remove') ? 'selected' : ''; ?>>Remove</option>
+                        <option value="change_plan" <?php echo ($this->selectedAction === 'change_plan') ? 'selected' : ''; ?>>Change Plan</option>
+                        <option value="change_subscriber" <?php echo ($this->selectedAction === 'change_subscriber') ? 'selected' : ''; ?>>Change Subscriber</option>
+                    </select>
+                    
+                    <!-- Plan Selection -->
+                    <div id="plan-selection" style="display: none;">
+                        <label for="new_plan_id">New Service Plan:</label>
+                        <select name="new_plan_id" id="new_plan_id">
+                            <option value="">Select Plan...</option>
+                            <?php foreach ($this->servicePlans as $planId => $planName): ?>
+                                <option value="<?php echo $this->escape($planId); ?>"><?php echo $this->escape($planName); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <!-- Subscriber Selection -->
+                    <div id="subscriber-selection" style="display: none;">
+                        <label for="new_subscriber_id">New Subscriber:</label>
+                        <select name="new_subscriber_id" id="new_subscriber_id">
+                            <option value="">Select Subscriber...</option>
+                            <?php foreach ($this->clients as $clientId => $clientName): ?>
+                                <option value="<?php echo $this->escape($clientId); ?>"><?php echo $this->escape($clientName); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="submit-section">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">
+                        Execute Bulk Operation
+                    </button>
+                    <div id="processing-indicator" style="display: none;">
+                        <span>Processing... Please wait</span>
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <?php if ($this->hasResults): ?>
+    <div class="results-section">
+        <h3>Operation Results</h3>
+        <div class="results-summary">
+            <?php
+            $successCount = count(array_filter($this->results, function($r) { return $r['status'] === 'success'; }));
+            $errorCount = count(array_filter($this->results, function($r) { return $r['status'] === 'error'; }));
+            ?>
+            <p><strong>Total Operations:</strong> <?php echo count($this->results); ?></p>
+            <p><strong>Successful:</strong> <span class="success"><?php echo $successCount; ?></span></p>
+            <p><strong>Failed:</strong> <span class="error"><?php echo $errorCount; ?></span></p>
+        </div>
+        
+        <div class="results-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domain/URL</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                        <th>Message</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->results as $result): ?>
+                    <tr class="<?php echo $result['status']; ?>">
+                        <td><?php echo $this->escape($result['url']); ?></td>
+                        <td><?php echo $this->escape($result['action']); ?></td>
+                        <td>
+                            <span class="status-badge <?php echo $result['status']; ?>">
+                                <?php echo ucfirst($result['status']); ?>
+                            </span>
+                        </td>
+                        <td><?php echo $this->escape($result['message']); ?></td>
+                        <td><?php echo $this->escape($result['timestamp']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="export-section">
+            <button type="button" id="export-csv" class="btn btn-secondary">
+                Export Results to CSV
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
