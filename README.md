@@ -219,7 +219,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Arthur Okonkwo**
 - GitHub: [@arthurokonkwo](https://github.com/arthurokonkwo)
-- Website: [arthurokonkwo.com] (https://arthurokonkwo.com)
+- Website: https://arthurokonkwo.com
 - Email: arthurokonkwo007@gmail.com
 
 ## 🙏 Acknowledgments
