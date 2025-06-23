@@ -14,7 +14,6 @@
                 <url>/modules/bulk-domain-manager/</url>
                 <title>Bulk Manager</title>
                 <description>Manage domains and subscriptions in bulk</description>
-                <icon>images/icon.png</icon>
                 <section>server</section>
                 <permissions>
                     <permission>domain-administration</permission>
