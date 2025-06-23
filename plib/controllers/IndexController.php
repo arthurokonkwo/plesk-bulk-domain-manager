@@ -17,7 +17,7 @@ class IndexController extends pm_Controller_Action
         
         $this->view->headTitle('Bulk Domain Manager');
         
-        // Add CSS and JavaScript
+        // Add CSS and JavaScript with proper URLs
         $this->view->headLink()->appendStylesheet(pm_Context::getBaseUrl() . 'css/bulk-manager.css');
         $this->view->headScript()->appendFile(pm_Context::getBaseUrl() . 'js/bulk-manager.js');
     }
