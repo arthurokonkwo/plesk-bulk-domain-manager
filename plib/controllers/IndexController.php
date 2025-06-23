@@ -6,26 +6,22 @@
 
 class IndexController extends pm_Controller_Action
 {
+    protected $_accessLevel = 'admin';
+    
     public function init()
     {
         parent::init();
         
-        // Check if user has required permissions
-        if (!pm_Session::getClient()->hasPermission('domain-administration')) {
-            throw new pm_Exception('Insufficient permissions to access Bulk Domain Manager');
-        }
+        // Set the page title
+        $this->view->pageTitle = 'Bulk Domain Manager';
         
-        $this->view->headTitle('Bulk Domain Manager');
-        
-        // Add CSS and JavaScript with proper URLs
+        // Add CSS and JavaScript
         $this->view->headLink()->appendStylesheet(pm_Context::getBaseUrl() . 'css/bulk-manager.css');
         $this->view->headScript()->appendFile(pm_Context::getBaseUrl() . 'js/bulk-manager.js');
     }
     
     public function indexAction()
     {
-        $this->view->pageTitle = 'Bulk Domain Manager';
-        
         // Initialize form and result variables
         $this->view->urls = '';
         $this->view->selectedAction = '';
