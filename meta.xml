@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <id>bulk-domain-manager</id>
-    <n>Bulk Domain Manager</n>
+    <name>Bulk Domain Manager</name>
     <description>Manage multiple domains and subscriptions in bulk operations</description>
-    <version>1.0.0</version>
-    <release>1</release>
+    <version>1.0.1</version>
+    <release>2</release>
     <vendor>Custom Extension</vendor>
     <plesk_min_version>18.0.0</plesk_min_version>
+    
+    <!-- Icon definitions -->
+    <icon>htdocs/images/icon.png</icon>
     
     <admin_interface>
         <entries>
