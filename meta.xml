@@ -4,12 +4,14 @@
     <name>Bulk Domain Manager</name>
     <description>Manage multiple domains and subscriptions in bulk operations</description>
     <version>1.0.1</version>
-    <release>2</release>
+    <release>3</release>
     <vendor>Custom Extension</vendor>
     <plesk_min_version>18.0.0</plesk_min_version>
     
     <!-- Icon definitions -->
     <icon>htdocs/images/icon.png</icon>
+    <icon32>htdocs/images/icon-32.png</icon32>
+    <icon64>htdocs/images/icon-64.png</icon64>
     
     <admin_interface>
         <entries>
