@@ -37,17 +37,17 @@
             // Show appropriate action section based on selected type
             var selectedType = $('input[name="action_type"]:checked').val();
             if (selectedType) {
-                this.showActionSection(selectedType);
+                BulkManager.showActionSection(selectedType);
             }
             
             // Show plan/subscriber selection if needed
             var selectedAction = $('#subscription-action-select').val();
             if (selectedAction) {
-                this.handleSubscriptionActionChange();
+                BulkManager.handleSubscriptionActionChange();
             }
             
             // Initial URL validation
-            this.validateUrls();
+            BulkManager.validateUrls();
         },
         
         handleActionTypeChange: function() {
@@ -107,11 +107,11 @@
             
             if (invalidUrls.length === 0) {
                 feedback.removeClass('invalid').addClass('valid');
-                feedback.html('<strong>✓ Valid:</strong> ' + validUrls.length + ' URL(s) found');
+                feedback.html('<strong>? Valid:</strong> ' + validUrls.length + ' URL(s) found');
                 feedback.show();
             } else {
                 feedback.removeClass('valid').addClass('invalid');
-                feedback.html('<strong>⚠ Issues found:</strong> ' + invalidUrls.length + ' invalid URL(s). Valid: ' + validUrls.length);
+                feedback.html('<strong>? Issues found:</strong> ' + invalidUrls.length + ' invalid URL(s). Valid: ' + validUrls.length);
                 feedback.show();
             }
         },
