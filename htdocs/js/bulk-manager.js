@@ -120,9 +120,9 @@
             // Remove protocols and www
             var cleanUrl = url.replace(/^https?:\/\//, '').replace(/^www\./, '');
             
-            // Basic domain validation regex
-            var domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.[a-zA-Z]{2,}$/;
-            
+            // Basic domain validation regex - allow multi-level domains
+            var domainRegex = /^([a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.)+[a-zA-Z]{2,}$/;
+
             return domainRegex.test(cleanUrl.split('/')[0]);
         },
         
