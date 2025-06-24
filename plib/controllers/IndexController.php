@@ -133,36 +133,54 @@ class IndexController extends pm_Controller_Action
         try {
             // Try different approaches for different Plesk versions
             if (class_exists('pm_ServicePlan')) {
-                $servicePlans = pm_ServicePlan::getAll();
-                foreach ($servicePlans as $plan) {
-                    $plans[$plan->getId()] = $plan->getName();
-                }
-            } else {
-                // Fallback: Use API to get service plans
                 try {
-                    $request = '<packet><service-plan><get><filter/><dataset><gen_info/></dataset></get></service-plan></packet>';
-                    $response = pm_ApiRpc::getService()->call($request);
-                    
-                    if (isset($response->{'service-plan'}->get->result)) {
-                        $results = $response->{'service-plan'}->get->result;
-                        if (!is_array($results)) {
-                            $results = array($results);
-                        }
-                        
-                        foreach ($results as $result) {
-                            if (isset($result->data->gen_info)) {
-                                $plans[$result->id] = $result->data->gen_info->name;
-                            }
-                        }
+                    $servicePlans = pm_ServicePlan::getAll();
+                    foreach ($servicePlans as $plan) {
+                        $plans[$plan->getId()] = $plan->getName();
                     }
                 } catch (Exception $e) {
-                    // If API fails, provide default message
-                    $plans[0] = 'Service plans unavailable - using API method';
+                    // Fall back to API if pm_ServicePlan::getAll fails
+                    // This is a safer approach than using a non-existent method
+                    $plans = $this->_getServicePlansViaApi();
                 }
+            } else {
+                // Fall back: Use API to get service plans
+                $plans = $this->_getServicePlansViaApi();
             }
         } catch (Exception $e) {
             // Handle error gracefully - provide basic functionality
             $plans[0] = 'Default Plan';
+            pm_Log::err("Error getting service plans: " . $e->getMessage());
+        }
+        return $plans;
+    }
+    
+    /**
+     * Get service plans via API - Fallback method
+     */
+    private function _getServicePlansViaApi()
+    {
+        $plans = array();
+        try {
+            $request = '<packet><service-plan><get><filter/><dataset><gen_info/></dataset></get></service-plan></packet>';
+            $response = pm_ApiRpc::getService()->call($request);
+            
+            if (isset($response->{'service-plan'}->get->result)) {
+                $results = $response->{'service-plan'}->get->result;
+                if (!is_array($results)) {
+                    $results = array($results);
+                }
+                
+                foreach ($results as $result) {
+                    if (isset($result->data->gen_info)) {
+                        $plans[$result->id] = $result->data->gen_info->name;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // If API fails, provide default message
+            $plans[0] = 'Service plans unavailable - using API method';
+            pm_Log::err("API error getting service plans: " . $e->getMessage());
         }
         return $plans;
     }
@@ -180,7 +198,7 @@ class IndexController extends pm_Controller_Action
                     $clients[$client->getId()] = $client->getProperty('pname') . ' (' . $client->getProperty('login') . ')';
                 }
             } else {
-                // Fallback: Use API to get clients
+                // Fall back: Use API to get clients
                 try {
                     $request = '<packet><customer><get><filter/><dataset><gen_info/></dataset></get></customer></packet>';
                     $response = pm_ApiRpc::getService()->call($request);
@@ -199,11 +217,13 @@ class IndexController extends pm_Controller_Action
                     }
                 } catch (Exception $e) {
                     $clients[0] = 'Clients unavailable - using API method';
+                    pm_Log::err("API error getting clients: " . $e->getMessage());
                 }
             }
         } catch (Exception $e) {
             // Handle error gracefully
             $clients[0] = 'Admin User';
+            pm_Log::err("Error getting clients: " . $e->getMessage());
         }
         return $clients;
     }
